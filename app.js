@@ -25,7 +25,7 @@ schedule.scheduleJob("40 12 * * *", async () => {
     if (isBirthdayToday(user.dob)) {
       await sendBirthdayEmail(user.email, user.username);
     } else {
-      await sendBirthdayEmail("ekene75616@gmail.com", kenz);
+      await sendBirthdayEmail("ekene75616@gmail.com", "kenz");
     }
   }
 });
