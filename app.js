@@ -11,7 +11,7 @@ app.use(express.static("public"));
 
 app.use(express.json());
 
-app.post("/submit", async (req, res) => {
+app.post("/submit", (req, res) => {
   const error = user.addUser(req.body);
   if (error) {
     return res.status(400).send({ message: error });
@@ -19,7 +19,7 @@ app.post("/submit", async (req, res) => {
   res.send({ message: "Birthday reminder added successfully" });
 });
 
-schedule.scheduleJob("40 12 * * *", async () => {
+schedule.scheduleJob("45 12 * * *", async () => {
   const users = user.getUsers();
   for (const user of users) {
     if (isBirthdayToday(user.dob)) {
