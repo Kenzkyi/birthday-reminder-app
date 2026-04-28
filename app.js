@@ -19,7 +19,7 @@ app.post("/submit", (req, res) => {
   res.send({ message: "Birthday reminder added successfully" });
 });
 
-schedule.scheduleJob("45 12 * * *", async () => {
+schedule.scheduleJob("55 12 * * *", async () => {
   const users = user.getUsers();
   for (const user of users) {
     if (isBirthdayToday(user.dob)) {
