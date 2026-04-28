@@ -5,11 +5,8 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
   service: process.env.EMAIL_SERVICE,
   auth: {
-    type: "OAuth2",
-    user: process.env.EMAIL_USER,
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    refreshToken: process.env.REFRESH_TOKEN,
+    user: process.env.EMAIL_USER, // Your email
+    pass: process.env.EMAIL_PASS, // The code from Google
   },
 });
 exports.sendBirthdayEmail = async function (recipientEmail, name) {
