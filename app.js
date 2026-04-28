@@ -19,6 +19,17 @@ app.post("/submit", (req, res) => {
   res.send({ message: "Birthday reminder added successfully" });
 });
 
+app.get("/test-email", async (req, res) => {
+  try {
+    // Trigger a test email immediately
+    await sendBirthdayEmail("ekene75616@gmail.com", "Tester");
+    res.send("Test email sent! Check your inbox.");
+  } catch (error) {
+    console.error("Test email failed:", error);
+    res.status(500).send("Failed to send test email.");
+  }
+});
+
 schedule.scheduleJob("55 12 * * *", async () => {
   const users = user.getUsers();
   for (const user of users) {
