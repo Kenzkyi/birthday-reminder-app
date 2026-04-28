@@ -22,7 +22,7 @@ app.post("/submit", (req, res) => {
 app.get("/test-email", async (req, res) => {
   try {
     // Trigger a test email immediately
-    await sendBirthdayEmail("ekene75616@gmail.com", "Tester");
+    await sendBirthdayEmail("ekene7561@gmail.com", "Tester");
     res.send("Test email sent! Check your inbox.");
   } catch (error) {
     console.error("Test email failed:", error);
@@ -36,7 +36,7 @@ schedule.scheduleJob("55 12 * * *", async () => {
     if (isBirthdayToday(user.dob)) {
       await sendBirthdayEmail(user.email, user.username);
     } else {
-      await sendBirthdayEmail("ekene75616@gmail.com", "kenz");
+      await sendBirthdayEmail("ekene7561@gmail.com", "kenz");
     }
   }
 });
