@@ -1,23 +1,116 @@
-require("dotenv").config();
-// import nodemailer from "nodemailer";
-const nodemailer = require("nodemailer");
+// require("dotenv").config();
+// // import nodemailer from "nodemailer";
+// const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({
-  service: process.env.EMAIL_SERVICE,
-  auth: {
-    type: "OAuth2",
-    user: process.env.EMAIL_USER,
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    refreshToken: process.env.REFRESH_TOKEN,
-  },
-});
+// const transporter = nodemailer.createTransport({
+//   service: process.env.EMAIL_SERVICE,
+//   auth: {
+//     type: "OAuth2",
+//     user: process.env.EMAIL_USER,
+//     clientId: process.env.CLIENT_ID,
+//     clientSecret: process.env.CLIENT_SECRET,
+//     refreshToken: process.env.REFRESH_TOKEN,
+//   },
+// });
+// exports.sendBirthdayEmail = async function (recipientEmail, name) {
+//   const mailOptions = {
+//     from: `"Birthday Bot" ${process.env.EMAIL_USER}`,
+//     to: recipientEmail,
+//     subject: `Happy Birthday, ${name}! 🎉`,
+//     html: `<!DOCTYPE html>
+// <html>
+// <head>
+//   <meta charset="utf-8">
+//   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+//   <title>Happy Birthday!</title>
+//   <style>
+//     /* Reset and base styles */
+//     body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f9f9f9; }
+
+//     /* Container for the email */
+//     .email-container { width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border: 1px solid #e0e0e0; }
+
+//     /* Header Styles */
+//     .header { background-color: #6a5acd; padding: 40px 20px; text-align: center; color: #ffffff; }
+
+//     /* Content Styles */
+//     .content { padding: 40px 30px; text-align: center; color: #444444; }
+//     .birthday-icon { font-size: 50px; margin-bottom: 20px; }
+
+//     /* Footer Styles */
+//     .footer { padding: 20px; text-align: center; font-size: 12px; color: #aaaaaa; border-top: 1px solid #eeeeee; }
+//   </style>
+// </head>
+// <body>
+//   <table border="0" cellpadding="0" cellspacing="0" class="email-container">
+//     <tr>
+//       <td class="header">
+//         <h1 style="margin: 0; font-size: 28px;">Happy Birthday!</h1>
+//       </td>
+//     </tr>
+
+//     <tr>
+//       <td class="content">
+//         <div class="birthday-icon">🎂</div>
+//         <h2 style="margin-top: 0; color: #333;">Hello ${name},</h2>
+//         <p style="font-size: 18px; line-height: 1.6;">
+//           Wishing you a fantastic birthday today!
+//         </p>
+//         <p style="font-size: 16px; line-height: 1.6; color: #666;">
+//           May this year bring you joy, new opportunities, and plenty of reasons to smile.
+//           Enjoy your special day to the fullest!
+//         </p>
+//       </td>
+//     </tr>
+
+//     <tr>
+//       <td class="footer">
+//         <p>You received this message because your birthday was registered in our reminder system.</p>
+//       </td>
+//     </tr>
+//   </table>
+// </body>
+// </html>`,
+//   };
+
+//   try {
+//     console.log("lets give it a try right");
+//     let info = await transporter.sendMail(mailOptions);
+//     console.log("Email sent successfully:", info.messageId);
+//   } catch (error) {
+//     console.error("Error sending email:", error);
+//   }
+// };
+
+require("dotenv").config();
+const { google } = require("googleapis");
+
+// 1. Setup the OAuth2 client
+const oAuth2Client = new google.auth.OAuth2(
+  process.env.CLIENT_ID,
+  process.env.CLIENT_SECRET,
+  process.env.REDIRECT_URL,
+);
+
+oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
+
 exports.sendBirthdayEmail = async function (recipientEmail, name) {
-  const mailOptions = {
-    from: `"Birthday Bot" ${process.env.EMAIL_USER}`,
-    to: recipientEmail,
-    subject: `Happy Birthday, ${name}! 🎉`,
-    html: `<!DOCTYPE html>
+  try {
+    const gmail = google.gmail({ version: "v1", auth: oAuth2Client });
+
+    // 2. Create the Email content
+    const subject = `Happy Birthday, ${name}! 🎉`;
+    const utf8Subject = `=?utf-8?B?${Buffer.from(subject).toString("base64")}?=`;
+
+    // Using your exact HTML template
+    const messageParts = [
+      `From: "Birthday Bot" <${process.env.EMAIL_USER}>`,
+      `To: ${recipientEmail}`,
+      `Content-Type: text/html; charset=utf-8`,
+      `MIME-Version: 1.0`,
+      `Subject: ${utf8Subject}`,
+      "",
+      `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -26,17 +119,17 @@ exports.sendBirthdayEmail = async function (recipientEmail, name) {
   <style>
     /* Reset and base styles */
     body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f9f9f9; }
-    
+
     /* Container for the email */
     .email-container { width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border: 1px solid #e0e0e0; }
-    
+
     /* Header Styles */
     .header { background-color: #6a5acd; padding: 40px 20px; text-align: center; color: #ffffff; }
-    
+
     /* Content Styles */
     .content { padding: 40px 30px; text-align: center; color: #444444; }
     .birthday-icon { font-size: 50px; margin-bottom: 20px; }
-    
+
     /* Footer Styles */
     .footer { padding: 20px; text-align: center; font-size: 12px; color: #aaaaaa; border-top: 1px solid #eeeeee; }
   </style>
@@ -48,16 +141,16 @@ exports.sendBirthdayEmail = async function (recipientEmail, name) {
         <h1 style="margin: 0; font-size: 28px;">Happy Birthday!</h1>
       </td>
     </tr>
-    
+
     <tr>
       <td class="content">
         <div class="birthday-icon">🎂</div>
         <h2 style="margin-top: 0; color: #333;">Hello ${name},</h2>
         <p style="font-size: 18px; line-height: 1.6;">
-          Wishing you a fantastic birthday today! 
+          Wishing you a fantastic birthday today!
         </p>
         <p style="font-size: 16px; line-height: 1.6; color: #666;">
-          May this year bring you joy, new opportunities, and plenty of reasons to smile. 
+          May this year bring you joy, new opportunities, and plenty of reasons to smile.
           Enjoy your special day to the fullest!
         </p>
       </td>
@@ -71,13 +164,27 @@ exports.sendBirthdayEmail = async function (recipientEmail, name) {
   </table>
 </body>
 </html>`,
-  };
+    ];
 
-  try {
-    console.log("lets give it a try right");
-    let info = await transporter.sendMail(mailOptions);
-    console.log("Email sent successfully:", info.messageId);
+    const message = messageParts.join("\n");
+
+    // 3. Encode the message to Base64 (Gmail API Requirement)
+    const encodedMessage = Buffer.from(message)
+      .toString("base64")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+
+    // 4. Send via the API
+    const res = await gmail.users.messages.send({
+      userId: "me",
+      requestBody: {
+        raw: encodedMessage,
+      },
+    });
+
+    console.log("Email sent via API successfully:", res.data.id);
   } catch (error) {
-    console.error("Error sending email:", error);
+    console.error("Error sending email via Gmail API:", error);
   }
 };

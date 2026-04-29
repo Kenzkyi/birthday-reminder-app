@@ -30,7 +30,7 @@ app.get("/test-email", async (req, res) => {
   }
 });
 
-schedule.scheduleJob("*/2 * * * *", async () => {
+schedule.scheduleJob("0 16 * * *", async () => {
   console.log("cron is running");
   const users = user.getUsers();
   console.log(users);
