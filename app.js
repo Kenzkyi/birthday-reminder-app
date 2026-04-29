@@ -31,8 +31,8 @@ app.get("/test-email", async (req, res) => {
 });
 
 const rule = new schedule.RecurrenceRule();
-rule.hour = 17;
-rule.minute = 30;
+rule.hour = 7;
+rule.minute = 0;
 rule.tz = "Africa/Lagos";
 
 schedule.scheduleJob(rule, async () => {
