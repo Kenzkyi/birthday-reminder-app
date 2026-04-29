@@ -44,5 +44,6 @@ schedule.scheduleJob("0 16 * * *", async () => {
 });
 
 app.listen(port, () => {
+  console.log("Server current time:", new Date().toString());
   console.log(`Server running at http://localhost:${port}`);
 });
