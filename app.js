@@ -30,7 +30,12 @@ app.get("/test-email", async (req, res) => {
   }
 });
 
-schedule.scheduleJob("0 16 * * *", async () => {
+const rule = new schedule.RecurrenceRule();
+rule.hour = 16;
+rule.minute = 15;
+rule.tz = "Africa/Lagos";
+
+schedule.scheduleJob(rule, async () => {
   console.log("cron is running");
   const users = user.getUsers();
   console.log(users);
@@ -44,6 +49,5 @@ schedule.scheduleJob("0 16 * * *", async () => {
 });
 
 app.listen(port, () => {
-  console.log("Server current time:", new Date().toString());
   console.log(`Server running at http://localhost:${port}`);
 });
