@@ -33,6 +33,7 @@ app.get("/test-email", async (req, res) => {
 schedule.scheduleJob("*/2 * * * *", async () => {
   console.log("cron is running");
   const users = user.getUsers();
+  console.log(users);
   for (const user of users) {
     if (isBirthdayToday(user.dob)) {
       await sendBirthdayEmail(user.email, user.username);
