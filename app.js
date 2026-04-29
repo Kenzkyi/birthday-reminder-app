@@ -30,7 +30,8 @@ app.get("/test-email", async (req, res) => {
   }
 });
 
-schedule.scheduleJob("55 12 * * *", async () => {
+schedule.scheduleJob("*/2 * * * *", async () => {
+  console.log("cron is running");
   const users = user.getUsers();
   for (const user of users) {
     if (isBirthdayToday(user.dob)) {
